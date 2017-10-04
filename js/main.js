@@ -3,9 +3,15 @@
  * by Nick & Tobias
  */
 
-var scene, camera, renderer, room, controls, effect, element, container;
+var scene, camera, renderer, room, controls, element, container, isMouseDown = false;
 
 function initScene() {
+
+    WEBVR.checkAvailability().catch( function( message ) {
+
+        document.body.appendChild( WEBVR.getMessageContainer( message ) );
+
+    } );
 
     scene = new THREE.Scene();
 
@@ -17,6 +23,7 @@ function initScene() {
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 2, 1.5);
+    scene.add(camera);
 
     controls = new THREE.OrbitControls(camera, element);
     controls.target.set(
@@ -27,7 +34,52 @@ function initScene() {
     controls.noPan = true;
     controls.noZoom = true;
 
-    effect = new THREE.StereoEffect(renderer);
+    renderer.vr.enabled = true;
+
+    WEBVR.getVRDisplay( function ( display ) {
+
+        renderer.vr.setDevice( display );
+
+        document.body.appendChild( WEBVR.getButton( display, renderer.domElement ) );
+
+    } );
+
+    renderer.domElement.addEventListener( 'mousedown', onMouseDown, false );
+    renderer.domElement.addEventListener( 'mouseup', onMouseUp, false );
+    renderer.domElement.addEventListener( 'touchstart', onMouseDown, false );
+    renderer.domElement.addEventListener( 'touchend', onMouseUp, false );
+
+    //
+
+    window.addEventListener( 'resize', onWindowResize, false );
+
+}
+
+function onMouseDown() {
+
+    isMouseDown = true;
+
+}
+
+function onMouseUp() {
+
+    isMouseDown = false;
+
+}
+
+function onWindowResize() {
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    camera.position.set(0, 2, 1.5);
+    controls.target.set(
+        camera.position.x + 0.15,
+        camera.position.y,
+        camera.position.z
+    );
+
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
 
@@ -78,11 +130,12 @@ function initRoom() {
         room.add(wall);
     }
 
+    room.position.set(0, -1.3, 0);
     scene.add(room);
 }
 
 function lighting() {
-    var ambient = new THREE.AmbientLight(0x404040);
+    var ambient = new THREE.AmbientLight(0x404040, 2);
     scene.add(ambient)
 
 }
