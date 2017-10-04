@@ -21,9 +21,8 @@ function initScene() {
     container = document.getElementById('webglviewer');
     container.appendChild(element);
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 2, 1.5);
-    scene.add(camera);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    //scene.add(camera);
 
     controls = new THREE.OrbitControls(camera, element);
     controls.target.set(
@@ -71,7 +70,6 @@ function onWindowResize() {
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    camera.position.set(0, 2, 1.5);
     controls.target.set(
         camera.position.x + 0.15,
         camera.position.y,
@@ -99,50 +97,68 @@ function initRoom() {
     var textureLoader = new THREE.TextureLoader();
 
     var floorGeometry = new THREE.BoxGeometry(5, .01, 5);
-    var floorMaterial = new THREE.MeshLambertMaterial({map: textureLoader.load('textures/laken.jpg'), side: THREE.DoubleSide});
+    var floorMaterial = new THREE.MeshLambertMaterial({
+        map: textureLoader.load('textures/concrete.jpg'),
+        side: THREE.DoubleSide
+    });
 
     room = new THREE.Mesh(floorGeometry, floorMaterial);
 
     //The walls
-    var wallNGeometry = new THREE.BoxGeometry(5, 3, 0);
-    var wallEGeometry = new THREE.BoxGeometry(0.01, 3, 5);
-    var wallSGeometry = new THREE.BoxGeometry(5, 3, .01);
-    var wallWGeometry = new THREE.BoxGeometry(.01, 3, 5);
-    var ceilingGeometry = new THREE.BoxGeometry(5, .01, 5);
+    var wallNGeometry = new THREE.BoxGeometry(5, 3, .1);
+    var wallEGeometry = new THREE.BoxGeometry(0.1, 3, 5);
+    var wallSGeometry = new THREE.BoxGeometry(5, 3, .1);
+    var wallWGeometry = new THREE.BoxGeometry(.1, 3, 5);
+    var ceilingGeometry = new THREE.BoxGeometry(5, .1, 5);
 
-    var wallNMaterial = new THREE.MeshLambertMaterial({map: textureLoader.load('textures/Keu.jpg'), side: THREE.DoubleSide});
-    var wallEMaterial = new THREE.MeshLambertMaterial({map: textureLoader.load('textures/Keu.jpg'), side: THREE.DoubleSide});
-    var wallSMaterial = new THREE.MeshLambertMaterial({map: textureLoader.load('textures/Keu.jpg'), side: THREE.DoubleSide});
-    var wallWMaterial = new THREE.MeshLambertMaterial({map: textureLoader.load('textures/Keu.jpg'), side: THREE.DoubleSide});
-    var ceilingMaterial = new THREE.MeshLambertMaterial({map: textureLoader.load('textures/1.jpg'), side: THREE.DoubleSide});
+    var wallNMaterial = new THREE.MeshLambertMaterial({
+        map: textureLoader.load('textures/Keu.jpg'),
+        side: THREE.DoubleSide
+    });
+    var wallEMaterial = new THREE.MeshLambertMaterial({
+        map: textureLoader.load('textures/Keu.jpg'),
+        side: THREE.DoubleSide
+    });
+    var wallSMaterial = new THREE.MeshLambertMaterial({
+        map: textureLoader.load('textures/Keu.jpg'),
+        side: THREE.DoubleSide
+    });
+    var wallWMaterial = new THREE.MeshLambertMaterial({
+        map: textureLoader.load('textures/Keu.jpg'),
+        side: THREE.DoubleSide
+    });
+    var ceilingMaterial = new THREE.MeshLambertMaterial({
+        map: textureLoader.load('textures/concrete.jpg')
+    });
 
     var roomData = [
-        {posX:0, posY:1.5, posZ:-2.5, rotX:0, rotY:0, rotZ:0, geometry:wallNGeometry, material:wallNMaterial},
-        {posX:2.5, posY:1.5, posZ:0, rotX:0, rotY:90, rotZ:0, geometry:wallEGeometry, material:wallEMaterial},
-        {posX:0, posY:1.5, posZ:2.5, rotX:0, rotY:0, rotZ:0, geometry:wallSGeometry, material:wallSMaterial},
-        {posX:-2.5, posY:1.5, posZ:0, rotX:0, rotY:90, rotZ:0, geometry:wallWGeometry, material:wallWMaterial},
-        {posX:0, posY:3, posZ:0, rotX:0, rotY:0, rotZ:0, geometry:ceilingGeometry, material:ceilingMaterial}
+        {posX: 0, posY: 1.5, posZ: -2.5, rotX: 0, rotY: 0, rotZ: 0, geometry: wallNGeometry, material: wallNMaterial},
+        {posX: 2.5, posY: 1.5, posZ: 0, rotX: 0, rotY: 90, rotZ: 0, geometry: wallEGeometry, material: wallEMaterial},
+        {posX: 0, posY: 1.5, posZ: 2.5, rotX: 0, rotY: 0, rotZ: 0, geometry: wallSGeometry, material: wallSMaterial},
+        {posX: -2.5, posY: 1.5, posZ: 0, rotX: 0, rotY: 90, rotZ: 0, geometry: wallWGeometry, material: wallWMaterial},
+        {posX: 0, posY: 3, posZ: 0, rotX: 0, rotY: 0, rotZ: 0, geometry: ceilingGeometry, material: ceilingMaterial}
     ];
 
-    for(var i = 0; i < roomData.length; i++){
+    for (var i = 0; i < roomData.length; i++) {
         var wall = new THREE.Mesh(roomData[i].geometry, roomData[i].material);
         wall.position.set(roomData[i].posX, roomData[i].posY, roomData[i].posZ);
         room.add(wall);
     }
 
-    room.position.set(0, -1.3, 0);
+    room.position.set(0, -1.3, -2);
     scene.add(room);
 }
 
 function lighting() {
-    var ambient = new THREE.AmbientLight(0x404040, 2);
-    scene.add(ambient)
+
+
+    var ambient = new THREE.AmbientLight(0xFFFFFF, 0.3);
+    scene.add(ambient);
 
 }
 
 function render() {
     requestAnimationFrame( render );
-
     controls.update();
 
     renderer.render( scene, camera );
