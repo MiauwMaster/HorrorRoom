@@ -128,7 +128,8 @@ function initRoom() {
         side: THREE.DoubleSide
     });
     var ceilingMaterial = new THREE.MeshLambertMaterial({
-        map: textureLoader.load('textures/concrete.jpg')
+        map: textureLoader.load('textures/concrete.jpg'),
+        side: THREE.DoubleSide
     });
 
     var roomData = [
@@ -144,6 +145,9 @@ function initRoom() {
         wall.position.set(roomData[i].posX, roomData[i].posY, roomData[i].posZ);
         room.add(wall);
     }
+
+    light(0, 2, 0, room);
+
 
     room.position.set(0, -1.3, -2);
     scene.add(room);
