@@ -3,7 +3,7 @@
  * by Nick & Tobias
  */
 
-var scene, camera, renderer, room, controls, element, container, isMouseDown = false;
+var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false;
 
 function initScene() {
 
@@ -146,8 +146,6 @@ function initRoom() {
         room.add(wall);
     }
 
-    light(0, 2, 0, room);
-
 
     room.position.set(0, -1.3, -2);
     scene.add(room);
@@ -155,15 +153,48 @@ function initRoom() {
 
 function lighting() {
 
+    var lampGeometry = new THREE.SphereGeometry(0.2, 40, 40);
+    var lampMaterial = new THREE.MeshPhongMaterial({color:0xffffff, emissive:0xffffff , side: THREE.DoubleSide});
 
-    var ambient = new THREE.AmbientLight(0xFFFFFF, 0.3);
-    scene.add(ambient);
+    lamp = new THREE.Mesh(lampGeometry, lampMaterial);
+    lamp.position.set(0, 2.81, 0);
+
+    var pointlight = new THREE.PointLight(0xffffff, 1, 200, 2);
+    lamp.add(pointlight);
+
+
+    var plateGeometry = new THREE.CylinderGeometry(1, 0.4, 0.4, 40, 40);
+    var plateMaterial = new THREE.MeshLambertMaterial({color:0xbbbbbb});
+    var plate = new THREE.Mesh(plateGeometry, plateMaterial);
+    plate.scale.set(.3, .3, .3);
+    plate.position.set(0, 0.1, 0);
+    lamp.add(plate);
+
+    var ambient = new THREE.AmbientLight(0xFFFFFF, 0.2);
+    lamp.add(ambient);
+
+    room.add(lamp);
+
+}
+
+function animate() {
+
+    var onoff = Math.floor(Math.random() * 50) + 1;
+
+    if (onoff >= 47){
+        lamp.visible = false;
+
+    }
+    else{
+        lamp.visible = true;
+    }
 
 }
 
 function render() {
     requestAnimationFrame( render );
     controls.update();
+    animate();
 
     renderer.render( scene, camera );
 
