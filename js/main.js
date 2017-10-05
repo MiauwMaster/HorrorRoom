@@ -112,19 +112,19 @@ function initRoom() {
     var ceilingGeometry = new THREE.BoxGeometry(5, .1, 5);
 
     var wallNMaterial = new THREE.MeshLambertMaterial({
-        map: textureLoader.load('textures/Keu.jpg'),
+        map: textureLoader.load('textures/concrete_wall1.jpg'),
         side: THREE.DoubleSide
     });
     var wallEMaterial = new THREE.MeshLambertMaterial({
-        map: textureLoader.load('textures/Keu.jpg'),
+        map: textureLoader.load('textures/concrete_wall2.jpg'),
         side: THREE.DoubleSide
     });
     var wallSMaterial = new THREE.MeshLambertMaterial({
-        map: textureLoader.load('textures/Keu.jpg'),
+        map: textureLoader.load('textures/concrete_wall.jpg'),
         side: THREE.DoubleSide
     });
     var wallWMaterial = new THREE.MeshLambertMaterial({
-        map: textureLoader.load('textures/Keu.jpg'),
+        map: textureLoader.load('textures/concrete_wall.jpg'),
         side: THREE.DoubleSide
     });
     var ceilingMaterial = new THREE.MeshLambertMaterial({
@@ -146,6 +146,12 @@ function initRoom() {
         room.add(wall);
     }
 
+    var doorGeo = new THREE.BoxGeometry(1, 0.2, 1);
+    var doorMat = new THREE.MeshLambertMaterial({map: textureLoader.load('textures/wood.jpg')});
+    var trapdoor = new THREE.Mesh(doorGeo, doorMat);
+    trapdoor.position.set(1.8, 3, 1.8);
+
+    room.add(trapdoor);
 
     room.position.set(0, -1.3, -2);
     scene.add(room);
@@ -153,32 +159,45 @@ function initRoom() {
 
 function lighting() {
 
-    var lampGeometry = new THREE.SphereGeometry(0.2, 40, 40);
-    var lampMaterial = new THREE.MeshPhongMaterial({color:0xffffff, emissive:0xffffff , side: THREE.DoubleSide});
+    var lampGeo = new THREE.SphereGeometry(0.1, 40, 40);
+    var lampMat = new THREE.MeshPhongMaterial({color:0xffffff, emissive:0xffffff , side: THREE.DoubleSide});
+    lamp = new THREE.Mesh(lampGeo, lampMat);
 
-    lamp = new THREE.Mesh(lampGeometry, lampMaterial);
-    lamp.position.set(0, 2.81, 0);
-
-    var pointlight = new THREE.PointLight(0xffffff, 1, 200, 2);
+    var pointlight = new THREE.PointLight(0xffffff, 0.8, 200, 2);
     lamp.add(pointlight);
 
 
-    var plateGeometry = new THREE.CylinderGeometry(1, 0.4, 0.4, 40, 40);
-    var plateMaterial = new THREE.MeshLambertMaterial({color:0xbbbbbb});
-    var plate = new THREE.Mesh(plateGeometry, plateMaterial);
-    plate.scale.set(.3, .3, .3);
-    plate.position.set(0, 0.1, 0);
+    var socketGeo = new THREE.CylinderGeometry(0.1, 0.2, 0.2, 40, 40);
+    var socketMat = new THREE.MeshPhongMaterial({color:0xa8460a});
+    var socket = new THREE.Mesh(socketGeo, socketMat);
+    socket.scale.set(0.3, 0.3, 0.3);
+    socket.position.set(0, 0.1, 0);
+    lamp.add(socket);
+
+
+    var wireGeo = new THREE.CylinderGeometry(0.01, 0.01, 0.5, 40, 40);
+    var wireMat = new THREE.MeshLambertMaterial({color:0x000000});
+    var wire = new THREE.Mesh(wireGeo, wireMat);
+    wire.position.set(0, 0.4, 0);
+    lamp.add(wire);
+
+    var plateGeo = new THREE.CylinderGeometry(0.1, 0.05, 0.05, 40, 40);
+    var plateMat = new THREE.MeshLambertMaterial({color:0x000000});
+    var plate = new THREE.Mesh(plateGeo, plateMat);
+    plate.position.set(0, 0.7, 0);
     lamp.add(plate);
 
-    var ambient = new THREE.AmbientLight(0xFFFFFF, 0.2);
+    var ambient = new THREE.AmbientLight(0xFFFFFF, 0.15);
     lamp.add(ambient);
 
+    lamp.position.set(0, 2.25, 0);
     room.add(lamp);
 
 }
 
 function animate() {
 
+    //lights flashing
     var onoff = Math.floor(Math.random() * 50) + 1;
 
     if (onoff >= 47){
@@ -194,7 +213,7 @@ function animate() {
 function render() {
     requestAnimationFrame( render );
     controls.update();
-    animate();
+    //animate();
 
     renderer.render( scene, camera );
 
