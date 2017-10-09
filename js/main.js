@@ -98,7 +98,7 @@ function initRoom() {
 
     var floorGeometry = new THREE.BoxGeometry(5, .01, 5);
     var floorMaterial = new THREE.MeshLambertMaterial({
-        map: textureLoader.load('textures/concrete.jpg'),
+        map: textureLoader.load('textures/floor.jpg'),
         side: THREE.DoubleSide
     });
 
@@ -195,12 +195,28 @@ function lighting() {
 
 }
 
+function audioplay() {
+
+    //heartbeat
+    var listener = new THREE.AudioListener();
+    camera.add( listener );
+    var heartbeat = new THREE.Audio( listener );
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( 'audio/heartbeat.mp3', function( buffer ) {
+        heartbeat.setBuffer( buffer );
+        heartbeat.setLoop(true);
+        heartbeat.setVolume(0.1);
+        heartbeat.play();
+    });
+
+}
+
 function animate() {
 
     //lights flashing
     var onoff = Math.floor(Math.random() * 50) + 1;
 
-    if (onoff >= 47){
+    if (onoff >= 48){
         lamp.visible = false;
 
     }
@@ -208,7 +224,39 @@ function animate() {
         lamp.visible = true;
     }
 
+
 }
+
+function spider() {
+
+    var loader = new THREE.ObjectLoader();
+
+    loader.load( 'models/spider.json', function ( object ) {
+
+        var material = new THREE.MeshLambertMaterial( { emissive:0x000000, color: 0x161616 } );
+
+        object.traverse( function ( child ) {
+
+            if ( child instanceof THREE.Mesh ) {
+
+                child.material = material;
+
+            }
+
+        } );
+
+        var angle = 90 *Math.PI / 180;
+        object.scale.set(0.3, 0.3, 0.3);
+        object.rotateY(angle);
+        object.rotateZ(angle * -1);
+        object.position.set(0, 2.3, 2.5);
+        room.add( object );
+
+    } );
+
+
+}
+
 
 function render() {
     requestAnimationFrame( render );
@@ -222,4 +270,6 @@ function render() {
 initScene();
 initRoom();
 lighting();
+audioplay();
+spider();
 render();
