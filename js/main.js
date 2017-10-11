@@ -229,31 +229,48 @@ function animate() {
 
 function spider() {
 
-    var loader = new THREE.ObjectLoader();
+    var manager = new THREE.LoadingManager();
 
-    loader.load( 'models/spider.json', function ( object ) {
+    var texture = new THREE.Texture();
 
-        var material = new THREE.MeshLambertMaterial( { emissive:0x000000, color: 0x161616 } );
-
-        object.traverse( function ( child ) {
-
-            if ( child instanceof THREE.Mesh ) {
-
-                child.material = material;
-
-            }
-
-        } );
-
-        var angle = 90 *Math.PI / 180;
-        object.scale.set(0.3, 0.3, 0.3);
-        object.rotateY(angle);
-        object.rotateZ(angle * -1);
-        object.position.set(0, 2.3, 2.5);
-        room.add( object );
-
+    var loader = new THREE.ImageLoader( manager );
+    loader.load( 'textures/spidertexture.jpg', function ( image )
+    {
+        texture.image = image;
+        texture.needsUpdate = true;
     } );
 
+    var objloader = new THREE.OBJLoader( manager );
+
+    objloader.load(
+        'models/doll.obj',
+        function ( object )
+        {
+            object.scale.set(.2, .2, .2);
+            object.position.set(0, 0, -2);
+            room.add( object );
+        });
+
+
+    objloader.load(
+        'models/Spiders.obj',
+        function ( object )
+        {
+            object.traverse( function ( child )
+            {
+                if ( child instanceof THREE.Mesh )
+                {
+                    child.material.map = texture;
+                }
+            } );
+
+            var angle = 90 *Math.PI / 180;
+            object.rotateY(angle);
+            object.rotateX(angle);
+            object.rotateZ(angle * -1);
+            object.position.set(0, 2.3, 2.5);
+            room.add( object );
+        });
 
 }
 
