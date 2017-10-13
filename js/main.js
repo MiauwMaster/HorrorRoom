@@ -187,7 +187,7 @@ function lighting() {
     plate.position.set(0, 0.7, 0);
     lamp.add(plate);
 
-    var ambient = new THREE.AmbientLight(0xFFFFFF, 0.15);
+    var ambient = new THREE.AmbientLight(0xFFFFFF, 0.2);
     lamp.add(ambient);
 
     lamp.position.set(0, 2.25, 0);
@@ -228,49 +228,56 @@ function animate() {
 }
 
 function spider() {
+    THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
 
-    var manager = new THREE.LoadingManager();
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setPath( 'models/' );
+    mtlLoader.load( 'Spiders.mtl', function( materials ) {
 
-    var texture = new THREE.Texture();
+        materials.preload();
 
-    var loader = new THREE.ImageLoader( manager );
-    loader.load( 'textures/spidertexture.jpg', function ( image )
-    {
-        texture.image = image;
-        texture.needsUpdate = true;
-    } );
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setMaterials( materials );
+        objLoader.setPath( 'models/' );
+        objLoader.load( 'Spiders.obj', function ( object ) {
 
-    var objloader = new THREE.OBJLoader( manager );
-
-    objloader.load(
-        'models/doll.obj',
-        function ( object )
-        {
             object.scale.set(.2, .2, .2);
-            object.position.set(0, 0, -2);
-            room.add( object );
-        });
-
-
-    objloader.load(
-        'models/Spiders.obj',
-        function ( object )
-        {
-            object.traverse( function ( child )
-            {
-                if ( child instanceof THREE.Mesh )
-                {
-                    child.material.map = texture;
-                }
-            } );
-
             var angle = 90 *Math.PI / 180;
             object.rotateY(angle);
             object.rotateX(angle);
             object.rotateZ(angle * -1);
-            object.position.set(0, 2.3, 2.5);
+            object.position.set(0, 2.3, 2.1);
             room.add( object );
+            room.add( object );
+
         });
+
+    });
+}
+
+function doll() {
+
+
+    THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setPath( 'models/' );
+    mtlLoader.load( 'horrordoll.mtl', function( materials ) {
+
+        materials.preload();
+
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setMaterials( materials );
+        objLoader.setPath( 'models/' );
+        objLoader.load( 'horrordoll.obj', function ( object ) {
+
+            object.scale.set(.2, .2, .2);
+            object.position.set(0, 0, 0);
+            room.add( object );
+
+        });
+
+    });
 
 }
 
@@ -289,4 +296,5 @@ initRoom();
 lighting();
 audioplay();
 spider();
+doll();
 render();
