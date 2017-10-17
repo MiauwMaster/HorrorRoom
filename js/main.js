@@ -248,7 +248,6 @@ function spider() {
             object.rotateZ(angle * -1);
             object.position.set(0, 2.3, 2.1);
             room.add( object );
-            room.add( object );
 
         });
 
@@ -272,6 +271,32 @@ function doll() {
         objLoader.load( 'horrordoll.obj', function ( object ) {
 
             object.scale.set(.2, .2, .2);
+            object.position.set(-2.1, 0, -2);
+            room.add( object );
+
+        });
+
+    });
+
+}
+
+function dollchoke() {
+
+
+    THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setPath( 'models/' );
+    mtlLoader.load( 'Doll-choke.mtl', function( materials ) {
+
+        materials.preload();
+
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setMaterials( materials );
+        objLoader.setPath( 'models/' );
+        objLoader.load( 'Doll-choke.obj', function ( object ) {
+
+            object.scale.set(.3, .3, .3);
             object.position.set(0, 0, 0);
             room.add( object );
 
@@ -297,4 +322,5 @@ lighting();
 audioplay();
 spider();
 doll();
+dollchoke();
 render();
