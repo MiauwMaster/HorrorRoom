@@ -3,7 +3,7 @@
  * by Nick & Tobias
  */
 
-var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false;
+var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, renderspider, renderdolls, renderdarkness, renderclaustrofobia;
 
 function initScene() {
 
@@ -224,34 +224,37 @@ function animate() {
         lamp.visible = true;
     }
 
-
 }
 
 function spider() {
-    THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
 
-    var mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setPath( 'models/' );
-    mtlLoader.load( 'Spiders.mtl', function( materials ) {
+        THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
 
-        materials.preload();
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models/');
+        mtlLoader.load('Spiders.mtl', function (materials) {
 
-        var objLoader = new THREE.OBJLoader();
-        objLoader.setMaterials( materials );
-        objLoader.setPath( 'models/' );
-        objLoader.load( 'Spiders.obj', function ( object ) {
+            materials.preload();
 
-            object.scale.set(.2, .2, .2);
-            var angle = 90 *Math.PI / 180;
-            object.rotateY(angle);
-            object.rotateX(angle);
-            object.rotateZ(angle * -1);
-            object.position.set(0, 2.3, 2.1);
-            room.add( object );
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models/');
+            objLoader.load('Spiders.obj', function (spiderobj) {
+
+                spiderobj.scale.set(.2, .2, .2);
+                var angle = 90 * Math.PI / 180;
+                spiderobj.rotateY(angle);
+                spiderobj.rotateX(angle);
+                spiderobj.rotateZ(angle * -1);
+                spiderobj.position.set(0, 2.3, 2.1);
+
+                if (renderspider == true){
+                    room.add(spiderobj);
+                }
+
+            });
 
         });
-
-    });
 }
 
 function doll() {
@@ -297,7 +300,7 @@ function dollchoke() {
         objLoader.load( 'Doll-choke.obj', function ( object ) {
 
             object.scale.set(.3, .3, .3);
-            object.position.set(0, 0, 0);
+            object.position.set(0, 0, 1);
             room.add( object );
 
         });
@@ -306,11 +309,17 @@ function dollchoke() {
 
 }
 
+function checkmenu() {
+    renderspider = false;
+    animate();
+
+}
+
 
 function render() {
     requestAnimationFrame( render );
     controls.update();
-    //animate();
+    checkmenu();
 
     renderer.render( scene, camera );
 
