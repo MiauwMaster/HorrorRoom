@@ -4,19 +4,19 @@
  */
 
 
-var Choices = function() {
-    this.renderspider = false;
-    this.renderclaustrofobia = false;
-    this.renderdolls = false;
-    this.renderdarkness = false;
+var Choices = {
+    spiders : false,
+    claustrofobia : false,
+    dolls : false,
+    darkness : false
     // Define render logic ...
 };
 
-window.onload = function() {
-    var text = new Choices();
-    var gui = new dat.GUI();
-    gui.add(text, 'renderspider');
-    gui.add(text, 'renderclaustrofobia');
-    gui.add(text, 'renderdolls');
-    gui.add(text, 'renderdarkness');
-};
+    var gui = new dat.GUI({width : 300});
+    gui.add(Choices, 'spiders').onChange(function(value){checkmenu().renderspider = value;});
+    gui.add(Choices, 'renderclaustrofobia');
+    gui.add(Choices, 'renderdolls');
+    gui.add(Choices, 'renderdarkness');
+
+
+// gui.add(, 'renderspider').onChange(function(value){checkmenurenderaan;});

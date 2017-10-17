@@ -7,11 +7,11 @@ var scene, camera, renderer, room, controls, element, container, lamp, isMouseDo
 
 function initScene() {
 
-    WEBVR.checkAvailability().catch( function( message ) {
+   /* WEBVR.checkAvailability().catch( function( message ) {
 
         document.body.appendChild( WEBVR.getMessageContainer( message ) );
 
-    } );
+    } );*/
 
     scene = new THREE.Scene();
 
@@ -311,7 +311,7 @@ function dollchoke() {
 
 function checkmenu() {
     renderspider = false;
-    animate();
+    //animate();
 
 }
 
