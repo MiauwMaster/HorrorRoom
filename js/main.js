@@ -3,7 +3,7 @@
  * by Nick & Tobias
  */
 
-var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, renderspider, renderdolls, renderdarkness, renderclaustrofobia;
+var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, spiderobj, dollchokeobj;
 
 function initScene() {
 
@@ -239,18 +239,18 @@ function spider() {
             var objLoader = new THREE.OBJLoader();
             objLoader.setMaterials(materials);
             objLoader.setPath('models/');
-            objLoader.load('Spiders.obj', function (spiderobj) {
+            objLoader.load('Spiders.obj', function (object) {
 
-                spiderobj.scale.set(.2, .2, .2);
+                object.scale.set(.2, .2, .2);
                 var angle = 90 * Math.PI / 180;
-                spiderobj.rotateY(angle);
-                spiderobj.rotateX(angle);
-                spiderobj.rotateZ(angle * -1);
-                spiderobj.position.set(0, 2.3, 2.1);
+                object.rotateY(angle);
+                object.rotateX(angle);
+                object.rotateZ(angle * -1);
+                object.position.set(0, 2.3, 2.1);
 
-                if (renderspider == true){
-                    room.add(spiderobj);
-                }
+                spiderobj = object;
+                room.add(spiderobj);
+                spiderobj.visible = false;
 
             });
 
@@ -301,7 +301,9 @@ function dollchoke() {
 
             object.scale.set(.3, .3, .3);
             object.position.set(0, 0, 1);
-            room.add( object );
+            dollchokeobj = object;
+            room.add( dollchokeobj );
+            dollchokeobj.visible = false;
 
         });
 
@@ -309,18 +311,17 @@ function dollchoke() {
 
 }
 
-function checkmenu() {
-    renderspider = false;
-    //animate();
-
+function spidervisible(value) {
+     spiderobj.visible = value;
 }
 
+function dollchokevisible(value) {
+    dollchokeobj.visible = value;
+}
 
 function render() {
     requestAnimationFrame( render );
     controls.update();
-    checkmenu();
-
     renderer.render( scene, camera );
 
 }
