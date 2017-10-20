@@ -3,7 +3,7 @@
  * by Nick & Tobias
  */
 
-var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, spiderobj, dollchokeobj;
+var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, spiderobj, dollchokeobj, lightflashenable;
 
 function initScene() {
 
@@ -187,12 +187,11 @@ function lighting() {
     plate.position.set(0, 0.7, 0);
     lamp.add(plate);
 
-    var ambient = new THREE.AmbientLight(0xFFFFFF, 0.2);
+    var ambient = new THREE.AmbientLight(0xFFFFFF, 0.15);
     lamp.add(ambient);
 
     lamp.position.set(0, 2.25, 0);
     room.add(lamp);
-
 }
 
 function audioplay() {
@@ -211,19 +210,24 @@ function audioplay() {
 
 }
 
-function animate() {
+function lightflash() {
 
     //lights flashing
-    var onoff = Math.floor(Math.random() * 50) + 1;
+    var onoff = Math.floor(Math.random() * 100) + 1;
 
-    if (onoff >= 48){
-        lamp.visible = false;
+    if (onoff >= 99){
+        lamp.visible = true;
 
     }
     else{
-        lamp.visible = true;
+        lamp.visible = false;
     }
 
+}
+
+function toggledarkness(value) {
+    lamp.visible = !value;
+    lightflashenable = value;
 }
 
 function spider() {
@@ -323,6 +327,7 @@ function render() {
     requestAnimationFrame( render );
     controls.update();
     renderer.render( scene, camera );
+    if (lightflashenable === true){lightflash()};
 
 }
 

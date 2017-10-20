@@ -15,8 +15,9 @@ var Choices = {
     var gui = new dat.GUI({width : 300});
     gui.add(Choices, 'spiders').onChange(function(value){spidervisible(value)});
     gui.add(Choices, 'dolls').onChange(function(value){dollchokevisible(value)});
+    gui.add(Choices, 'darkness').onChange(function(value){toggledarkness(value)});
     gui.add(Choices, 'renderclaustrofobia');
-    gui.add(Choices, 'renderdarkness');
+
 
 
 // gui.add(, 'renderspider').onChange(function(value){checkmenurenderaan;});
