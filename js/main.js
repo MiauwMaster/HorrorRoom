@@ -3,7 +3,7 @@
  * by Nick & Tobias
  */
 
-var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, spiderobj, dollchokeobj, lightflashenable, wallN;
+var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, spiderobj, dollchokeobj, lightflashenable, wallN, claustrotoggle;
 
 function initScene() {
 
@@ -345,11 +345,17 @@ function dollchokevisible(value) {
     dollchokeobj.visible = value;
 }
 
+function claustrophobiastart() {
+    if (wallN.position.z < -0.2){wallN.translateZ(0.003);}
+}
+
 function render() {
     requestAnimationFrame( render );
     controls.update();
-    renderer.render( scene, camera );
     if (lightflashenable === true){lightflash()}
+    if(claustrotoggle === true){claustrophobiastart();}
+
+    renderer.render( scene, camera );
 }
 
 initScene();

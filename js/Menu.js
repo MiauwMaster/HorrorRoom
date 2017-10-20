@@ -6,7 +6,7 @@
 
 var Choices = {
     spiders : false,
-    claustrofobia : false,
+    claustrophobia : false,
     dolls : false,
     darkness : false
     // Define render logic ...
@@ -16,7 +16,9 @@ var Choices = {
     gui.add(Choices, 'spiders').onChange(function(value){spidervisible(value)});
     gui.add(Choices, 'dolls').onChange(function(value){dollchokevisible(value)});
     gui.add(Choices, 'darkness').onChange(function(value){toggledarkness(value)});
-    gui.add(Choices, 'renderclaustrofobia');
+    gui.add(Choices, 'claustrophobia').onChange(function(value){claustrotoggle = value});
+
+
 
 
 
