@@ -3,7 +3,7 @@
  * by Nick & Tobias
  */
 
-var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, spiderobj, dollchokeobj, lightflashenable, wallN, claustrotoggle;
+var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, spiderobj,dollobj , dollchokeobj, lightflashenable, wallN, claustrotoggle;
 
 function initScene() {
 
@@ -212,7 +212,7 @@ function lighting() {
     var ambient = new THREE.AmbientLight(0xFFFFFF, 0.15);
     lamp.add(ambient);
 
-    lamp.position.set(0, 2.25, 0);
+    lamp.position.set(0, 2.25, 1.3);
     room.add(lamp);
 }
 
@@ -232,6 +232,17 @@ function audioplay() {
 
 }
 
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min) ) + min;
+}
+
+
+
 function lightflash() {
 
     //lights flashing
@@ -247,7 +258,8 @@ function lightflash() {
 
 }
 
-function toggledarkness(value) {
+async function toggledarkness(value) {
+    await sleep(20000);
     lamp.visible = !value;
     lightflashenable = value;
 }
@@ -301,7 +313,8 @@ function doll() {
 
             object.scale.set(.2, .2, .2);
             object.position.set(-2.1, 0, -2);
-            room.add( object );
+            dollobj = object;
+            room.add( dollobj );
 
         });
 
@@ -337,16 +350,50 @@ function dollchoke() {
 
 }
 
-function spidervisible(value) {
-     spiderobj.visible = value;
+async function spidervisible(value) {
+    //first appearance
+    await sleep(getRndInteger(30000, 90000));
+    spiderobj.visible = value;
+    await sleep(getRndInteger(8000, 10000));
+    spiderobj.visible = false;
+
+    //second appearance
+    await sleep(getRndInteger(80000, 100000));
+    spiderobj.position.set(0, 0, 1);
+    var angle = -90 * Math.PI / 180;
+    spiderobj.rotateY(angle);
+    spiderobj.rotateX(angle);
+    spiderobj.rotateZ(angle * -1);
+    spiderobj.rotateY(180 * Math.PI / 180);
+    spiderobj.visible = value;
+    await sleep(getRndInteger(2000, 4000));
+    spiderobj.visible = false;
+
 }
 
-function dollchokevisible(value) {
+async function dollchokevisible(value) {
+    //first appearance
+    await sleep(getRndInteger(60000, 120000));
     dollchokeobj.visible = value;
+    await sleep(getRndInteger(1000, 1500));
+    dollchokeobj.visible = false;
+
+    //second appearance
+    await sleep(getRndInteger(60000, 120000));
+    dollchokeobj.visible = value;
+    await sleep(getRndInteger(1000, 1500));
+    dollchokeobj.visible = false;
+
 }
 
-function claustrophobiastart() {
-    if (wallN.position.z < -0.2){wallN.translateZ(0.003);}
+async function claustrophobiastart() {
+    await sleep(getRndInteger(50000, 900000));
+    if (wallN.position.z < 1){wallN.translateZ(0.001);}
+    await sleep(60000);
+    dollobj.position.set(0, 0.8, 1.8);
+
+
+
 }
 
 function render() {
@@ -354,6 +401,7 @@ function render() {
     controls.update();
     if (lightflashenable === true){lightflash()}
     if(claustrotoggle === true){claustrophobiastart();}
+
 
     renderer.render( scene, camera );
 }
