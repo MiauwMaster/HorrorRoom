@@ -3,7 +3,7 @@
  * by Nick & Tobias
  */
 
-var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, spiderobj, dollchokeobj, lightflashenable;
+var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, spiderobj, dollchokeobj, lightflashenable, wallN;
 
 function initScene() {
 
@@ -132,6 +132,27 @@ function initRoom() {
         side: THREE.DoubleSide
     });
 
+    wallN = new THREE.Mesh(wallNGeometry, wallNMaterial);
+    wallN.position.set(0, 1.5, -2.5);
+    room.add(wallN);
+
+    var wallE = new THREE.Mesh(wallEGeometry, wallEMaterial);
+    wallE.position.set(2.5, 1.5, 0);
+    room.add(wallE);
+
+    var wallS = new THREE.Mesh(wallSGeometry, wallSMaterial);
+    wallS.position.set(0, 1.5, 2.5);
+    room.add(wallS);
+
+    var wallW = new THREE.Mesh(wallWGeometry, wallWMaterial);
+    wallW.position.set(-2.5, 1.5, 0);
+    room.add(wallW);
+
+    var ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+    ceiling.position.set(0, 3, 0);
+    room.add(ceiling);
+
+    /*
     var roomData = [
         {posX: 0, posY: 1.5, posZ: -2.5, rotX: 0, rotY: 0, rotZ: 0, geometry: wallNGeometry, material: wallNMaterial},
         {posX: 2.5, posY: 1.5, posZ: 0, rotX: 0, rotY: 90, rotZ: 0, geometry: wallEGeometry, material: wallEMaterial},
@@ -145,6 +166,7 @@ function initRoom() {
         wall.position.set(roomData[i].posX, roomData[i].posY, roomData[i].posZ);
         room.add(wall);
     }
+    */
 
     var doorGeo = new THREE.BoxGeometry(1, 0.2, 1);
     var doorMat = new THREE.MeshLambertMaterial({map: textureLoader.load('textures/wood.jpg')});
@@ -327,8 +349,7 @@ function render() {
     requestAnimationFrame( render );
     controls.update();
     renderer.render( scene, camera );
-    if (lightflashenable === true){lightflash()};
-
+    if (lightflashenable === true){lightflash()}
 }
 
 initScene();
