@@ -3,7 +3,7 @@
  * by Nick & Tobias
  */
 
-var scene, camera, renderer, room, controls, element, container, lamp, isMouseDown = false, spiderobj,dollobj , dollchokeobj, lightflashenable, wallN, claustrotoggle;
+var scene, camera, renderer, room, outside,  controls, element, container, lamp, isMouseDown = false, spiderobj, dollobj , dollchokeobj, lightflashenable, wallN, claustrotoggle;
 
 function initScene() {
 
@@ -175,6 +175,12 @@ function initRoom() {
 
     room.add(trapdoor);
 
+    outsideGeo = new THREE.BoxGeometry(1, 1, 1);
+    outsideMat = new THREE.MeshStandardMaterial();
+    outside = new THREE.Mesh(outsideGeo, outsideMat);
+    outside.position.set(0, 0, 20);
+    room.add(outside);
+
     room.position.set(0, -1.3, -2);
     scene.add(room);
 }
@@ -185,7 +191,7 @@ function lighting() {
     var lampMat = new THREE.MeshPhongMaterial({color:0xffffff, emissive:0xffffff , side: THREE.DoubleSide});
     lamp = new THREE.Mesh(lampGeo, lampMat);
 
-    var pointlight = new THREE.PointLight(0xffffff, 0.8, 200, 2);
+    var pointlight = new THREE.PointLight(0xffffff, 0.5, 200, 2);
     lamp.add(pointlight);
 
 
@@ -209,14 +215,14 @@ function lighting() {
     plate.position.set(0, 0.7, 0);
     lamp.add(plate);
 
-    var ambient = new THREE.AmbientLight(0xFFFFFF, 0.15);
+    var ambient = new THREE.AmbientLight(0xFFFFFF, 0.1);
     lamp.add(ambient);
 
     lamp.position.set(0, 2.25, 1.3);
     room.add(lamp);
 }
 
-function audioplay() {
+function heartbeatplay() {
 
     //heartbeat
     var listener = new THREE.AudioListener();
@@ -229,6 +235,45 @@ function audioplay() {
         heartbeat.setVolume(0.1);
         heartbeat.play();
     });
+
+}
+
+function skinpeelplay(){
+    var listener = new THREE.AudioListener;
+    camera.add(listener);
+
+    var sound = new THREE.PositionalAudio( listener );
+
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( 'audio/Peeling_Skin_from_Bone.mp3', function( buffer ) {
+        sound.setBuffer( buffer );
+        sound.setRefDistance( 40 );
+        sound.setVolume(0.1);
+        sound.play();
+    });
+
+    spiderobj.add(sound);
+
+}
+
+function bonebreakplay(){
+    var listener = new THREE.AudioListener;
+    camera.add(listener);
+
+    var sound = new THREE.PositionalAudio( listener );
+
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( 'audio/Pulling_Bone_Cracks.mp3', function( buffer ) {
+        sound.setBuffer( buffer );
+        sound.setRefDistance( 40 );
+        sound.setVolume(0.1);
+
+        setTimeout(function () {
+            sound.play();
+        }, getRndInteger(50000, 120000) )
+
+    });
+    wallN.add(sound);
 
 }
 
@@ -348,6 +393,7 @@ function spidervisible(value) {
     setTimeout(function ()
     {
         spiderobj.visible = value;
+        if (value === true){skinpeelplay();}
 
         //set visible to false after 8 - 10 sec
         setTimeout(function ()
@@ -366,6 +412,8 @@ function spidervisible(value) {
         spiderobj.rotateZ(angle * -1);
         spiderobj.rotateY(180 * Math.PI / 180);
         spiderobj.visible = value;
+        if (value === true){skinpeelplay();}
+
 
         //set visible to false after 8 - 10 sec
         setTimeout(function ()
@@ -407,11 +455,15 @@ function claustrophobiastart() {
     {
         if (wallN.position.z < 1){wallN.translateZ(0.001);}
 
+        /*
         // move the doll right in your face after wait of 60 sec
         setTimeout(function ()
         {
-            dollobj.position.set(0, 0.8, 1.8);
+            //positie is brak en werkt niet goed samen met dollchoke
+            //dollobj.position.set(0, 0.8, 1.8);
         }, 60000);
+        */
+
     }, getRndInteger(50000, 90000));
 }
 
@@ -419,7 +471,8 @@ function render() {
     requestAnimationFrame( render );
     controls.update();
     if (lightflashenable === true){lightflash()}
-    if(claustrotoggle === true){claustrophobiastart();}
+    if (claustrotoggle === true){claustrophobiastart();}
+
 
 
     renderer.render( scene, camera );
@@ -428,8 +481,9 @@ function render() {
 initScene();
 initRoom();
 lighting();
-audioplay();
 spider();
 doll();
 dollchoke();
+heartbeatplay();
+bonebreakplay();
 render();
