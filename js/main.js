@@ -232,16 +232,9 @@ function audioplay() {
 
 }
 
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min) ) + min;
 }
-
-
 
 function lightflash() {
 
@@ -258,10 +251,10 @@ function lightflash() {
 
 }
 
-async function toggledarkness(value) {
-    await sleep(20000);
-    lamp.visible = !value;
-    lightflashenable = value;
+function toggledarkness(value) {
+    setTimeout(function () {
+        lightflashenable = value;
+    }, 20000);
 }
 
 function spider() {
@@ -350,50 +343,76 @@ function dollchoke() {
 
 }
 
-async function spidervisible(value) {
-    //first appearance
-    await sleep(getRndInteger(30000, 90000));
-    spiderobj.visible = value;
-    await sleep(getRndInteger(8000, 10000));
-    spiderobj.visible = false;
+function spidervisible(value) {
+    //change visible to value after wait of 30 - 90 sec
+    setTimeout(function ()
+    {
+        spiderobj.visible = value;
 
-    //second appearance
-    await sleep(getRndInteger(80000, 100000));
-    spiderobj.position.set(0, 0, 1);
-    var angle = -90 * Math.PI / 180;
-    spiderobj.rotateY(angle);
-    spiderobj.rotateX(angle);
-    spiderobj.rotateZ(angle * -1);
-    spiderobj.rotateY(180 * Math.PI / 180);
-    spiderobj.visible = value;
-    await sleep(getRndInteger(2000, 4000));
-    spiderobj.visible = false;
+        //set visible to false after 8 - 10 sec
+        setTimeout(function ()
+        {
+            spiderobj.visible = false;
+        }, getRndInteger(8000, 10000));
+    }, getRndInteger(30000, 90000));
 
+    //change visible to value after wait of 90 - 180 sec
+    setTimeout(function ()
+    {
+        spiderobj.position.set(0, 0, 1);
+        var angle = -90 * Math.PI / 180;
+        spiderobj.rotateY(angle);
+        spiderobj.rotateX(angle);
+        spiderobj.rotateZ(angle * -1);
+        spiderobj.rotateY(180 * Math.PI / 180);
+        spiderobj.visible = value;
+
+        //set visible to false after 8 - 10 sec
+        setTimeout(function ()
+        {
+            spiderobj.visible = false;
+        }, getRndInteger(8000, 10000));
+    }, getRndInteger(90000, 180000));
 }
 
-async function dollchokevisible(value) {
-    //first appearance
-    await sleep(getRndInteger(60000, 120000));
-    dollchokeobj.visible = value;
-    await sleep(getRndInteger(1000, 1500));
-    dollchokeobj.visible = false;
+function dollchokevisible(value) {
+    // set visible to true after wait of 60 - 120 sec
+    setTimeout(function ()
+    {
+        dollchokeobj.visible = value;
 
-    //second appearance
-    await sleep(getRndInteger(60000, 120000));
-    dollchokeobj.visible = value;
-    await sleep(getRndInteger(1000, 1500));
-    dollchokeobj.visible = false;
+        //set visible to false after wait of 5 - 7 sec
+        setTimeout(function ()
+        {
+            dollchokeobj.visible = false;
+        }, getRndInteger(5000, 7000));
+    }, getRndInteger(60000, 120000));
 
+    // set visible to true after wait of 120 - 240 sec
+    setTimeout(function ()
+    {
+        dollchokeobj.visible = value;
+
+        //set visible to false after wait of 5 - 7 sec
+        setTimeout(function ()
+        {
+            dollchokeobj.visible = false;
+        }, getRndInteger(5000, 7000));
+    }, getRndInteger(120000, 240000));
 }
 
-async function claustrophobiastart() {
-    await sleep(getRndInteger(50000, 900000));
-    if (wallN.position.z < 1){wallN.translateZ(0.001);}
-    await sleep(60000);
-    dollobj.position.set(0, 0.8, 1.8);
+function claustrophobiastart() {
+    // start moving the wall after wait of 50 - 90 sec
+    setTimeout(function ()
+    {
+        if (wallN.position.z < 1){wallN.translateZ(0.001);}
 
-
-
+        // move the doll right in your face after wait of 60 sec
+        setTimeout(function ()
+        {
+            dollobj.position.set(0, 0.8, 1.8);
+        }, 60000);
+    }, getRndInteger(50000, 90000));
 }
 
 function render() {
