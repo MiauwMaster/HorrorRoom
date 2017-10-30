@@ -232,7 +232,7 @@ function heartbeatplay() {
     audioLoader.load( 'audio/heartbeat.mp3', function( buffer ) {
         heartbeat.setBuffer( buffer );
         heartbeat.setLoop(true);
-        heartbeat.setVolume(0.1);
+        heartbeat.setVolume(0.3);
         heartbeat.play();
     });
 
@@ -248,7 +248,7 @@ function skinpeelplay(){
     audioLoader.load( 'audio/Peeling_Skin_from_Bone.mp3', function( buffer ) {
         sound.setBuffer( buffer );
         sound.setRefDistance( 40 );
-        sound.setVolume(0.1);
+        sound.setVolume(0.5);
         sound.play();
     });
 
@@ -266,7 +266,7 @@ function bonebreakplay(){
     audioLoader.load( 'audio/Pulling_Bone_Cracks.mp3', function( buffer ) {
         sound.setBuffer( buffer );
         sound.setRefDistance( 40 );
-        sound.setVolume(0.1);
+        sound.setVolume(0.5);
 
         setTimeout(function () {
             sound.play();
@@ -377,7 +377,7 @@ function dollchoke() {
         objLoader.load( 'Doll-choke.obj', function ( object ) {
 
             object.scale.set(.3, .3, .3);
-            object.position.set(0, 0, 1);
+            object.position.set(0, 0, 1.1);
             dollchokeobj = object;
             room.add( dollchokeobj );
             dollchokeobj.visible = false;
@@ -433,7 +433,7 @@ function dollchokevisible(value) {
         setTimeout(function ()
         {
             dollchokeobj.visible = false;
-        }, getRndInteger(5000, 7000));
+        }, getRndInteger(3000, 5000));
     }, getRndInteger(60000, 120000));
 
     // set visible to true after wait of 120 - 240 sec
@@ -445,7 +445,7 @@ function dollchokevisible(value) {
         setTimeout(function ()
         {
             dollchokeobj.visible = false;
-        }, getRndInteger(5000, 7000));
+        }, getRndInteger(3000, 5000));
     }, getRndInteger(120000, 240000));
 }
 
