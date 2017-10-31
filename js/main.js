@@ -277,6 +277,23 @@ function bonebreakplay(){
 
 }
 
+function hissplay(){
+    var listener = new THREE.AudioListener;
+    camera.add(listener);
+
+    var sound = new THREE.PositionalAudio( listener );
+
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( 'audio/hiss.wav', function( buffer ) {
+        sound.setBuffer( buffer );
+        sound.setRefDistance( 40 );
+        sound.setVolume(1);
+        sound.play();
+    });
+    dollchokeobj.add(sound);
+
+}
+
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min) ) + min;
 }
@@ -286,7 +303,7 @@ function lightflash() {
     //lights flashing
     var onoff = Math.floor(Math.random() * 100) + 1;
 
-    if (onoff >= 99){
+    if (onoff >= 98){
         lamp.visible = true;
 
     }
@@ -428,6 +445,7 @@ function dollchokevisible(value) {
     setTimeout(function ()
     {
         dollchokeobj.visible = value;
+        if (value === true){ hissplay();}
 
         //set visible to false after wait of 5 - 7 sec
         setTimeout(function ()
@@ -440,6 +458,8 @@ function dollchokevisible(value) {
     setTimeout(function ()
     {
         dollchokeobj.visible = value;
+        if (value === true){ hissplay();}
+
 
         //set visible to false after wait of 5 - 7 sec
         setTimeout(function ()
@@ -453,7 +473,7 @@ function claustrophobiastart() {
     // start moving the wall after wait of 50 - 90 sec
     setTimeout(function ()
     {
-        if (wallN.position.z < 1){wallN.translateZ(0.001);}
+        if (wallN.position.z < 1.5){wallN.translateZ(0.001);}
 
         /*
         // move the doll right in your face after wait of 60 sec
@@ -487,3 +507,4 @@ dollchoke();
 heartbeatplay();
 bonebreakplay();
 render();
+hissplay();
